@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../utils/snackbar_helper.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({ Key? key }) : super(key: key);
   @override
@@ -36,6 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
     emailController.clear();
     passwordController.clear();
     rePasswordController.clear();
+    showSuccessMessage(context, message: 'Register Success');
     Get.offAll(LoginPage(),duration: Duration(milliseconds: 1500),);
   }
 

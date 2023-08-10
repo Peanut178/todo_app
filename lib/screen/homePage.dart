@@ -26,16 +26,16 @@ class _HomePageState extends State<HomePage> {
             child: PieChart(
               PieChartData(
                 pieTouchData: PieTouchData(
-                  touchCallback: (pieTouchResponse){
-                    setState(() {
-                      if(pieTouchResponse.touchInput is FlLongPressEnd || pieTouchResponse.touchInput is FlPanEnd){
-                        touchedIndex = -1;
-                      }
-                      else{
-                        touchedIndex = pieTouchResponse.touchSectionIndex;
-                      }
-                    });
-                  }
+                  // touchCallback: (pieTouchResponse){
+                  //   setState(() {
+                  //     if(pieTouchResponse.touchInput is FlLongPressEnd || pieTouchResponse.touchInput is FlPanEnd){
+                  //       touchedIndex = -1;
+                  //     }
+                  //     else{        
+                  //       touchedIndex = pieTouchResponse.touchSectionIndex;
+                  //     }
+                  //   });
+                  // }
                 ),
                 borderData: FlBorderData(show: false),
                 sectionsSpace: 5,

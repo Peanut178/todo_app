@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/registerPage.dart';
+import 'package:flutter_application_1/screen/todo_list.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import '../utils/snackbar_helper.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({ Key? key }) : super(key: key);
@@ -16,28 +19,28 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool passToggle = false;
+  final _usersBox = Hive.box('users');
 
+bool isEmailExists(String email) {
+  return _usersBox.values.any((user) => user['email'] == email);
+}
 
-Future<void> login() async {
-    String email = emailController.text.trim();
-    String password = passwordController.text;
+void _login() {
+  final enteredEmail = emailController.text;
+  final enteredPassword = passwordController.text;
 
-    var box = await Hive.openBox<User>('users');
-
-    if (!box.containsKey(email)) {
-      print('Email không tồn tại');
-      box.close();
-      return;
-    }
-    User user = box.get(email)!;
-
-    if (user.password != password) {
-      print('Mật khẩu không đúng');
+  if (isEmailExists(enteredEmail)) {
+    final user = _usersBox.values.firstWhere((user) => user['email'] == enteredEmail);
+    if (user['password'] == enteredPassword) {
+      showSuccessMessage(context, message: 'Login successful');
+      Get.offAll(TodoList());
     } else {
-      print('Đăng nhập thành công');
+      showErroMessage(context, message: 'Invalid password');
     }
-    box.close();
+  } else {
+    showErroMessage(context, message: 'Email not exits');
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +120,7 @@ Future<void> login() async {
                  InkWell(
                   onTap: (){
                     if(_formfield.currentState!.validate()){
-                      print("success");
-                      emailController.clear();
-                      passwordController.clear();
+                      _login();
                     }
                    },
                   child: Container(
@@ -129,11 +130,11 @@ Future<void> login() async {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Center(
-                      child: Text("Đăng nhập", style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),),
+                        child: Text("Đăng nhập", style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),),
                     ),
                   ),
                 ),
